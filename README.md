@@ -46,7 +46,7 @@ $('body [lang]').multilang({
 });
 ```
 
-Look on result
+[Look on result](http://redexp.github.io/multilang.js/test/index.html)
 
 ## How it works
 
