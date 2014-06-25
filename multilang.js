@@ -7,19 +7,12 @@
         }
 
         options = $.extend(true, {
+            autoTranslateTo: false,
             skipClass: 'skip',
             dictionary: {}
         }, options || {});
 
-        this.each(function(i, node){
-            var key = generateKey(node, options.skipClass),
-                langs = options.dictionary[key];
-
-            if (langs) {
-                langs.unshift(key);
-                $(node).data('translations', $.map(langs, toTranslation));
-            }
-        });
+        prepareTranslation(this, options);
 
         if (options.autoTranslateTo) {
             this.multilang(options.autoTranslateTo);
@@ -76,8 +69,8 @@
      * @param {string} trans
      * @returns {NodeList}
      */
-    function toTranslation(trans){
-        var cache = toTranslation.cache || (toTranslation.cache = {});
+    function toDomTranslation(trans){
+        var cache = toDomTranslation.cache || (toDomTranslation.cache = {});
 
         if (cache[trans]) return cache[trans];
 
@@ -86,22 +79,38 @@
         return cache[trans] = div.childNodes;
     }
 
-    function applyTranslation(node, num){
+    function prepareTranslation(list, options){
+        list.each(function(i, node){
+            var main = generateKey(node, options.skipClass),
+                translations = options.dictionary[main];
+
+            if (translations) {
+                if (!translations.main_added) {
+                    translations.unshift(main);
+                    translations.main_added = true;
+                }
+
+                $(node).data('translations', $.map(translations, toDomTranslation));
+            }
+        })
+    }
+
+    function applyTranslation(list, num){
         var errors = [];
 
-        node.each(function(i, item){
-            var translation = $(item).data('translations');
+        list.each(function(i, node){
+            var translation = $(node).data('translations');
 
             if (! translation) {
-                errors.push(item);
+                errors.push(node);
                 return;
             }
 
-            translate(item, translation[num]);
+            translate(node, translation[num]);
         });
 
         if (errors.length) {
-            console.error('No translation for');
+            console.error('No translations for');
             console.log(errors);
         }
     }
