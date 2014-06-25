@@ -87,17 +87,23 @@
     }
 
     function applyTranslation(node, num){
+        var errors = [];
+
         node.each(function(i, item){
             var translation = $(item).data('translations');
 
             if (! translation) {
-                console.error('No translation for');
-                console.log(item);
+                errors.push(item);
                 return;
             }
 
             translate(item, translation[num]);
         });
+
+        if (errors.length) {
+            console.error('No translation for');
+            console.log(errors);
+        }
     }
 
 })(jQuery);
