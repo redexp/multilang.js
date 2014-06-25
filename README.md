@@ -61,8 +61,13 @@ If you will not set any number, it will not translate to any language.
 
 ## Options
 
- * `dictionary:` - hash, where key is source text to compare with destination nodes key strings and values
+ * `dictionary: {}` - hash, where key is source text to compare with destination nodes key strings and values
    is array of translations
- * `autoTranslateTo:` - optional `Number`, means - to which language automatically translate selected
+ * `autoTranslateTo: false` - optional `Number`, means - to which language automatically translate selected
    nodes
- * `skipClass:` - name of class which will be indicate node as `<skip/>` tag in translation
+ * `skipClass: "skip"` - optional, name of class which will be indicate node as `<skip/>` tag in translation
+
+## Methods
+
+ * `0`, `1` or any other number - switch language to default if `0` or any other from array
+ * `"dictionary-sample", {multilang options}` - will return JSON string with dictionary sample for `dictionary:` option

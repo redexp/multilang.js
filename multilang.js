@@ -1,9 +1,13 @@
 (function($){
 
     $.fn.multilang = function(options){
-        if (typeof options !== 'object') {
+        if (typeof options === 'number') {
             applyTranslation(this, options);
             return this;
+        }
+
+        if (typeof options === 'string') {
+            return utils[options].apply(this, arguments);
         }
 
         options = $.extend(true, {
@@ -92,7 +96,7 @@
 
                 $(node).data('translations', $.map(translations, toDomTranslation));
             }
-        })
+        });
     }
 
     function applyTranslation(list, num){
@@ -114,5 +118,18 @@
             console.log(errors);
         }
     }
+
+    var utils = {
+        "dictionary-sample": function(options){
+            var dictionary = {};
+            this.each(function(i, node){
+                var main = generateKey(node, options.skipClass);
+
+                dictionary[main] = [""];
+            });
+
+            return JSON.stringify(dictionary);
+        }
+    };
 
 })(jQuery);
