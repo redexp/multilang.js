@@ -134,11 +134,17 @@
 
     $.multilang = function(dictionary){
         var translator = function(word){
-            if (translator.lang === 0) return word;
+            if (!dictionary[word]) {
+                translator.errors[word] = true;
+                return word;
+            }
+
+            if (translator.lang == 0) return word;
 
             return dictionary[word][translator.lang - 1];
         };
 
+        translator.errors = {};
         translator.lang = 0;
 
         return translator;
