@@ -84,39 +84,39 @@
     }
 
     function prepareTranslation(list, options){
+        var errors = [];
+
         list.each(function(i, node){
             var main = generateKey(node, options.skipClass),
                 translations = options.dictionary[main];
 
-            if (translations) {
-                if (!translations.main_added) {
-                    translations.unshift(main);
-                    translations.main_added = true;
-                }
-
-                $(node).data('translations', $.map(translations, toDomTranslation));
-            }
-        });
-    }
-
-    function applyTranslation(list, num){
-        var errors = [];
-
-        list.each(function(i, node){
-            var translation = $(node).data('translations');
-
-            if (! translation) {
+            if (! translations) {
                 errors.push(node);
                 return;
             }
 
-            translate(node, translation[num]);
+            if (!translations.main_added) {
+                translations.unshift(main);
+                translations.main_added = true;
+            }
+
+            $(node).data('translations', $.map(translations, toDomTranslation));
         });
 
-        if (errors.length) {
+        if (options.debug && errors.length) {
             console.error('No translations for');
             console.log(errors);
         }
+    }
+
+    function applyTranslation(list, num, debug){
+        list.each(function(i, node){
+            var translation = $(node).data('translations');
+
+            if (! translation) return;
+
+            translate(node, translation[num]);
+        });
     }
 
     var utils = {
